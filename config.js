@@ -1,7 +1,7 @@
 module.exports = {
-    FB_PAGE_TOKEN: '',
-    FB_VERIFY_TOKEN: '',
-    API_AI_CLIENT_ACCESS_TOKEN: '',
-    FB_APP_SECRET: '',
-    SERVER_URL: "",
+    FB_PAGE_TOKEN: 'EAAFlNhZBAOJQBAABfEm6i3TZB73nyHmyZBo0Xwzyam9ZBV0eBd2MnZB86D49zOAwUIOdrbgIdq1cZAR8qCkR6ZAmi2QI1aZBj2Nin1LQQTMeKTHN3g2kUa2Ngpy2FJOTH5PYxIiL2P9u4zeItTi8tP2HQEfZCkM7VvTvIypijbzGAdwZDZD',
+    FB_VERIFY_TOKEN: 'lovebotkorea',
+    API_AI_CLIENT_ACCESS_TOKEN: 'd67e72b7fa704ec399efa635b7f6e545',
+    FB_APP_SECRET: '2ac82ccf51a4f9194e8a284c800a6b04',
+    SERVER_URL: "https://glovers.herokuapp.com/",
 };

@@ -193,10 +193,10 @@ function handleApiAiAction(sender, action, responseText, contexts, parameters) {
 				target_app_id: 263902037430900,
 				metadata: "User wants to talk to you"
 			}
-
 			console.log("User exits the chatbot");
-			callHandoverApi(exitData);
+
 			sendTextMessage(sender, exitResponse);
+			callHandoverApi(exitData);
 			break;
 		default:
 			//unhandled action, just send back the text

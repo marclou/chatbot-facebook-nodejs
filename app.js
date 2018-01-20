@@ -185,8 +185,17 @@ function handleEcho(messageId, appId, metadata) {
 function handleApiAiAction(sender, action, responseText, contexts, parameters) {
 	switch (action) {
 		case 'exit-bot':
-			console.log("User want to exit the chatbot");
-			var exitResponse = "Okay !"
+			var exitResponse = "Alright, catch you later !";
+			var exitData = {
+				recipient: {
+					id: sender.id
+				},
+				target_app_id: 263902037430900,
+				metadata: "User wants to talk to you"
+			}
+
+			console.log("User exits the chatbot");
+			callHandoverApi(exitData);
 			sendTextMessage(sender, exitResponse);
 			break;
 		default:
@@ -672,6 +681,32 @@ function greetUserText(userId) {
 			console.error(response.error);
 		}
 
+	});
+}
+
+
+/*
+ * If user wants to exit chatbot to talk to admin of the page,  
+ * handover protocol is call with the webhook pass_thread_control.
+ */ 
+function callHandoverApi(handoverData) {
+	request({
+		uri: 'https://graph.facebook.com/v2.6/me/pass_thread_control',
+		qs: {
+			access_token: config.FB_PAGE_TOKEN
+		},
+		method: 'POST',
+		json: handoverData
+
+	}, function (error, response, body) {
+		if (!error && response.statusCode == 200) {
+			var recipientId = body.recipient_id;
+
+			console.log("Successfully called handover API for recipient %s",
+					recipientId);
+		} else {
+			console.error("Failed calling handover API", response.statusCode, response.statusMessage, body.error);
+		}
 	});
 }
 

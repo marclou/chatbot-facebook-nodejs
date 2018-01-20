@@ -184,6 +184,8 @@ function handleEcho(messageId, appId, metadata) {
 
 function handleApiAiAction(sender, action, responseText, contexts, parameters) {
 	switch (action) {
+		case 'exit-bot':
+			console.log("User want to exit the chatbot");
 		default:
 			//unhandled action, just send back the text
 			sendTextMessage(sender, responseText);

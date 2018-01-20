@@ -188,7 +188,7 @@ function handleApiAiAction(sender, action, responseText, contexts, parameters) {
 			var exitResponse = "Alright, catch you later !";
 			var exitData = {
 				recipient: {
-					id: sender.id
+					id: sender
 				},
 				target_app_id: 263902037430900,
 				metadata: "User wants to talk to you"

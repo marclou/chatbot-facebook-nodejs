@@ -93,24 +93,50 @@ app.post('/webhook/', function (req, res) {
 			var pageID = pageEntry.id;
 			var timeOfEvent = pageEntry.time;
 
-			// Iterate over each messaging event
-			pageEntry.messaging.forEach(function (messagingEvent) {
-				if (messagingEvent.optin) {
-					receivedAuthentication(messagingEvent);
-				} else if (messagingEvent.message) {
-					receivedMessage(messagingEvent);
-				} else if (messagingEvent.delivery) {
-					receivedDeliveryConfirmation(messagingEvent);
-				} else if (messagingEvent.postback) {
-					receivedPostback(messagingEvent);
-				} else if (messagingEvent.read) {
-					receivedMessageRead(messagingEvent);
-				} else if (messagingEvent.account_linking) {
-					receivedAccountLink(messagingEvent);
-				} else {
-					console.log("Webhook received unknown messagingEvent: ", messagingEvent);
-				}
-			});
+			// Secondary Receiver is in control - listen on standby channel
+			if (pageEntry.standby) {
+				// Iterate over each standby event
+				pageEntry.standby.forEach(function(event) {
+					const psid = event.sender.id;
+      				const message = event.message;
+
+      				if (message && message.postback && message.postback.payload == 'talk_to_lovebot') {
+				        // postback from persistent menu to take from Page inbox was clicked
+				        var returnBotMessage = {
+				        	recipient: {
+								id: psid
+							},
+							metadata: "User wants to talk back to LoveBot"
+				        };
+				        takeThreadControl(returnBotMessage);
+				     }
+				});
+			} 
+			// Bot is in control - listen for messages 
+			else if (pageEntry.messaging) {
+				// Iterate over each messaging event
+				pageEntry.messaging.forEach(function (messagingEvent) {
+					if (messagingEvent.optin) {
+						receivedAuthentication(messagingEvent);
+					} else if (messagingEvent.message) {
+						receivedMessage(messagingEvent);
+					} else if (messagingEvent.delivery) {
+						receivedDeliveryConfirmation(messagingEvent);
+					} else if (messagingEvent.postback) {
+						receivedPostback(messagingEvent);
+					} else if (messagingEvent.read) {
+						receivedMessageRead(messagingEvent);
+					} else if (messagingEvent.account_linking) {
+						receivedAccountLink(messagingEvent);
+					} else {
+						console.log("Webhook received unknown messagingEvent: ", messagingEvent);
+					}
+				});
+			}
+
+
+
+			
 		});
 
 		// Assume all went well.
@@ -197,19 +223,6 @@ function handleApiAiAction(sender, action, responseText, contexts, parameters) {
 
 			sendTextMessage(sender, exitResponse);
 			passThreadControl(exitData);
-			break;
-		case 'return-bot':
-			var returnResponse = "Hey there! LoveBot is back :)";
-			var returnData = {
-				recipient: {
-					id: sender
-				},
-				metadata: "User talks back to the bot"
-			}
-			console.log("User return to the chatbot");
-
-			sendTextMessage(sender, returnResponse);
-			takeThreadControl(returnData);
 			break;
 		default:
 			//unhandled action, just send back the text

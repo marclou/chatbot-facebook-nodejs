@@ -95,10 +95,13 @@ app.post('/webhook/', function (req, res) {
 
 			// Secondary Receiver is in control - listen on standby channel
 			if (pageEntry.standby) {
+				console.log("STANDBY EVENT");
 				// Iterate over each standby event
 				pageEntry.standby.forEach(function(event) {
 					const psid = event.sender.id;
       				const message = event.message;
+
+      				console.log(message);
 
       				if (message && message.postback && message.postback.payload == 'talk_to_lovebot') {
 				        // postback from persistent menu to take from Page inbox was clicked
@@ -113,7 +116,7 @@ app.post('/webhook/', function (req, res) {
 				});
 			} 
 			// Bot is in control - listen for messages 
-			else if (pageEntry.messaging) {
+			if (pageEntry.messaging) {
 				// Iterate over each messaging event
 				pageEntry.messaging.forEach(function (messagingEvent) {
 					if (messagingEvent.optin) {

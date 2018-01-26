@@ -115,7 +115,7 @@ app.post('/webhook/', function (req, res) {
 				});
 			} 
 			// Bot is in control - listen for messages 
-			else if (pageEntry.messaging) {
+			if (pageEntry.messaging && !pageEntry.standby) {
 				// Iterate over each messaging event
 				pageEntry.messaging.forEach(function (messagingEvent) {
 					if (messagingEvent.optin) {

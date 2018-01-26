@@ -101,7 +101,7 @@ app.post('/webhook/', function (req, res) {
 					var psid = messagingEvent.sender.id;
       				var message = messagingEvent.message;
 
-      				if (messagingEvent.postback && messagingEvent.postback.payload == 'talk_to_lovebot') {
+      				if (messagingEvent.postback) {
 				        // postback from persistent menu to take from Page inbox was clicked
 				        var returnBotMessage = {
 				        	recipient: {

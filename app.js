@@ -196,7 +196,20 @@ function handleApiAiAction(sender, action, responseText, contexts, parameters) {
 			console.log("User exits the chatbot");
 
 			sendTextMessage(sender, exitResponse);
-			callHandoverApi(exitData);
+			passThreadControl(exitData);
+			break;
+		case 'return-bot':
+			var returnResponse = "Hey there! LoveBot is back :)";
+			var returnData = {
+				recipient: {
+					id: sender
+				},
+				metadata: "User talks back to the bot"
+			}
+			console.log("User return to the chatbot");
+
+			sendTextMessage(sender, returnResponse);
+			takeThreadControl(returnData);
 			break;
 		default:
 			//unhandled action, just send back the text
@@ -687,11 +700,36 @@ function greetUserText(userId) {
 
 /*
  * If user wants to exit chatbot to talk to admin of the page,  
- * handover protocol is call with the webhook pass_thread_control.
+ * handover protocol is called with the webhook pass_thread_control.
  */ 
-function callHandoverApi(handoverData) {
+function passThreadControl(handoverData) {
 	request({
 		uri: 'https://graph.facebook.com/v2.6/me/pass_thread_control',
+		qs: {
+			access_token: config.FB_PAGE_TOKEN
+		},
+		method: 'POST',
+		json: handoverData
+
+	}, function (error, response, body) {
+		if (!error && response.statusCode == 200) {
+			var recipientId = body.recipient_id;
+
+			console.log("Successfully called handover API for recipient %s",
+					recipientId);
+		} else {
+			console.error("Failed calling handover API", response.statusCode, response.statusMessage, body.error);
+		}
+	});
+}
+
+/*
+ * If user wants to talk to the chatbot after human help.
+ * handover protocol is called with the webhook take_thread_control.
+ */ 
+function takeThreadControl(handoverData) {
+	request({
+		uri: 'https://graph.facebook.com/v2.6/me/take_thread_control',
 		qs: {
 			access_token: config.FB_PAGE_TOKEN
 		},

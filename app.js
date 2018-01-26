@@ -99,9 +99,10 @@ app.post('/webhook/', function (req, res) {
 				// Iterate over each standby event
 				pageEntry.standby.forEach(function(messagingEvent) {
 					var psid = messagingEvent.sender.id;
-      				var message = messagingEvent.message;
+   					console.log("user PSID : "+psid);
 
       				if (messagingEvent.postback) {
+      					console.log(messagingEvent.postback);
 				        // postback from persistent menu to take from Page inbox was clicked
 				        var returnBotMessage = {
 				        	recipient: {
@@ -114,7 +115,7 @@ app.post('/webhook/', function (req, res) {
 				});
 			} 
 			// Bot is in control - listen for messages 
-			if (pageEntry.messaging) {
+			else if (pageEntry.messaging) {
 				// Iterate over each messaging event
 				pageEntry.messaging.forEach(function (messagingEvent) {
 					if (messagingEvent.optin) {

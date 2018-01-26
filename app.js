@@ -99,10 +99,9 @@ app.post('/webhook/', function (req, res) {
 				// Iterate over each standby event
 				pageEntry.standby.forEach(function(messagingEvent) {
 					var psid = messagingEvent.sender.id;
-					console.log(messagingEvent.postback);
       				var message = messagingEvent.message;
 
-      				if (message && message.postback && message.postback.payload == 'talk_to_lovebot') {
+      				if (messagingEvent.postback && messagingEvent.postback.payload == 'talk_to_lovebot') {
 				        // postback from persistent menu to take from Page inbox was clicked
 				        var returnBotMessage = {
 				        	recipient: {
